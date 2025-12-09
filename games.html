@@ -1,614 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <link id="dynamic-favicon" rel="icon" href="">
+<link id="dynamic-favicon" rel="icon" href="">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Portland Galaxy - Games</title>
-<link id="dynamic-favicon" rel="icon" href="">
 
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body { height: 100%; font-family: 'Orbitron', sans-serif; overflow-x: hidden; color: white; cursor: url('https://i.imgur.com/VYw4R2X.png'), auto; }
-  body { background: #000; }
-  canvas { display: block; position: fixed; top:0; left:0; z-index: -1; }
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body {
+  height:100%;
+  font-family:'Orbitron',sans-serif;
+  background:black;
+  color:white;
+  overflow-x:hidden;
+  cursor:url('https://i.imgur.com/VYw4R2X.png'), auto;
+}
+canvas{position:fixed;top:0;left:0;z-index:-1}
 
-  .content {
-    position: relative;
-    padding: 20px;
-    max-width: 1200px;
-    margin: auto;
-    top: 50px;
-  }
+.content{max-width:1200px;margin:auto;padding:20px;top:50px;position:relative}
 
-  h1 {
-    font-size: 3rem;
-    margin-bottom: 20px;
-    text-align: center;
-    text-shadow: 0 0 20px #6ec6ff, 0 0 40px #4da6ff;
-    animation: glow 2s ease-in-out infinite alternate;
-  }
+h1{
+  text-align:center;
+  font-size:3rem;
+  margin-bottom:20px;
+  text-shadow:0 0 20px #6ec6ff,0 0 40px #4da6ff;
+  animation:glow 2s infinite alternate;
+}
 
-  @keyframes glow {
-    from { text-shadow: 0 0 10px #6ec6ff, 0 0 20px #4da6ff; }
-    to { text-shadow: 0 0 20px #9ad4ff, 0 0 40px #6ec6ff; }
-  }
+@keyframes glow{
+  from{text-shadow:0 0 10px #6ec6ff}
+  to{text-shadow:0 0 40px #9ad4ff}
+}
 
-  .home-btn {
-    display: block;
-    margin: 0 auto 30px auto;
-    padding: 12px 25px;
-    font-size: 1.1rem;
-    color: white;
-    background: rgba(0,0,50,0.6);
-    border: 2px solid #6ec6ff;
-    border-radius: 20px;
-    text-decoration: none;
-    text-align: center;
-    width: 120px;
-    transition: 0.3s;
-  }
-  .home-btn:hover {
-    background: #6ec6ff;
-    color: #090a0f;
-    box-shadow: 0 0 20px #6ec6ff, 0 0 40px #4da6ff;
-  }
+.home-btn{
+  display:block;
+  margin:0 auto 20px;
+  width:120px;
+  padding:12px;
+  text-align:center;
+  border-radius:20px;
+  text-decoration:none;
+  color:white;
+  border:2px solid #6ec6ff;
+  background:rgba(0,0,50,.6)
+}
 
-  .search-bar {
-    display: block;
-    margin: 0 auto 30px auto;
-    padding: 12px;
-    font-size: 1.1rem;
-    width: 50%;
-    border-radius: 20px;
-    border: 2px solid #6ec6ff;
-    background: rgba(0,0,50,0.5);
-    color: white;
-  }
+.search-bar,.sort-bar{
+  display:block;
+  margin:0 auto 20px;
+  width:50%;
+  padding:12px;
+  border-radius:20px;
+  font-size:1.1rem;
+  border:2px solid #6ec6ff;
+  background:rgba(0,0,50,.5);
+  color:white;
+}
 
-  .cards-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    justify-items: center;
-  }
+.cards-container{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:20px;
+}
 
-  .card {
-    display: block;
-    background: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 20px;
-    width: 100%;
-    max-width: 300px;
-    text-align: center;
-    border: 1px solid rgba(255,255,255,0.2);
-    text-decoration: none;
-    color: white;
-    transition: 0.3s;
-  }
-
-  .card h3 {
-    margin-bottom: 15px;
-    font-size: 1.5rem;
-    color: #9ad4ff;
-  }
-
-  .card p {
-    font-size: 1rem;
-    color: #ddd;
-  }
-
-  .card:hover {
-    background: rgba(110,198,255,0.2);
-    color: #090a0f;
-    border-color: #6ec6ff;
-    box-shadow: 0 0 20px #6ec6ff, 0 0 40px #4da6ff;
-  }
+.card{
+  background:rgba(255,255,255,.1);
+  backdrop-filter:blur(10px);
+  padding:20px;
+  border-radius:20px;
+  text-decoration:none;
+  color:white;
+  border:1px solid rgba(255,255,255,.2);
+  transition:.3s;
+}
+.card:hover{
+  background:rgba(110,198,255,.2);
+  box-shadow:0 0 20px #6ec6ff;
+}
+.card h3{color:#9ad4ff;margin-bottom:10px}
+.card p{color:#ddd}
 </style>
 </head>
-<body>
 
+<body>
 <canvas id="starfield"></canvas>
 
 <div class="content">
-  <h1>Games</h1>
-  <a href="index.html" class="home-btn">Home</a>
-  <input type="text" id="search" class="search-bar" placeholder="Search games..." onkeyup="filterGames()">
+<h1>Games</h1>
+<a href="index.html" class="home-btn">Home</a>
 
-  <div class="cards-container" id="cards-container">
-   
-      <a class="card" href="./games/nzpz/index.html">
-      <h3>Call of duty Zombies</h3>
-      <p>Zombie survival with strategy and defense mechanics.</p>
-    </a>
+<input id="search" class="search-bar" placeholder="Search games..." onkeyup="filterGames()">
 
-      <a class="card" href="./games/Hollow-Knight/index.html">
-      <h3>Hollow-Knight</h3>
-      <p>Explore a vast underground kingdom as a tiny knight.</p>
-    </a>
+<select id="sort" class="sort-bar" onchange="sortGames()">
+  <option value="az">Sort: A → Z</option>
+  <option value="za">Sort: Z → A</option>
+</select>
 
-      <a class="card" href="./games/Raft/index.html">
-      <h3>Raft</h3>
-      <p>Survive on a floating raft in the endless ocean.</p>
-    </a>
+<div class="cards-container" id="cards-container">
 
-      <a class="card" href="./games/Bendy-and-the-Ink-Machine/index.html">
-      <h3>Bendy and the Ink Machine</h3>
-      <p>Creepy puzzle-horror in an old animation studio.</p>
-    </a>
+<!-- ✅ ALL GAME CARDS -->
+<a class="card" href="./games/nzpz/index.html"><h3>Call of Duty Zombies</h3><p>Zombie survival.</p></a>
+<a class="card" href="./games/Hollow-Knight/index.html"><h3>Hollow Knight</h3><p>Explore an underground kingdom.</p></a>
+<a class="card" href="./games/Raft/index.html"><h3>Raft</h3><p>Survive on the ocean.</p></a>
+<a class="card" href="./games/Bendy-and-the-Ink-Machine/index.html"><h3>Bendy and the Ink Machine</h3><p>Creepy puzzle horror.</p></a>
+<a class="card" href="./games/minecraft/Astra_Client.html"><h3>Minecraft 1.8.8</h3><p>Classic multiplayer.</p></a>
+<a class="card" href="./games/minecraft/mincraft1,12,2.html"><h3>Minecraft 1.12.2</h3><p>Singleplayer.</p></a>
+<a class="card" href="./games/Buckshot-Roulette/index.html"><h3>Buckshot Roulette</h3><p>Luck-based chaos.</p></a>
+<a class="card" href="./games/FNAF/1.html"><h3>FNAF</h3><p>Survive the night.</p></a>
+<a class="card" href="./games/FNAF/2.html"><h3>FNAF 2</h3><p>New animatronics.</p></a>
+<a class="card" href="./games/FNAF/3.html"><h3>FNAF 3</h3><p>Haunted attraction.</p></a>
+<a class="card" href="./games/FNAF/4.html"><h3>FNAF 4</h3><p>Nightmares.</p></a>
+<a class="card" href="./games/FNAF/sisterlocation.html"><h3>FNAF Sister Location</h3><p>Underground horror.</p></a>
+<a class="card" href="./games/R.E.P.O/index.html"><h3>R.E.P.O</h3><p>Extraction horror.</p></a>
+<a class="card" href="./games/Undertale/index.html"><h3>Undertale</h3><p>Choices matter.</p></a>
+<a class="card" href="./games/Ultrakill/index.html"><h3>Ultrakill</h3><p>Fast FPS.</p></a>
+<a class="card" href="./games/Run3/Run 3.html"><h3>Run 3</h3><p>Space running.</p></a>
+<a class="card" href="./games/Slope/Slope.html"><h3>Slope</h3><p>Fast reflex runner.</p></a>
+<a class="card" href="./games/Superhot/Superhot.html"><h3>Superhot</h3><p>Time moves when you do.</p></a>
+<a class="card" href="./games/2048/2048.html"><h3>2048</h3><p>Number puzzle.</p></a>
+<a class="card" href="./games/happywheels/happywheelss.html"><h3>Happy Wheels</h3><p>Physics chaos.</p></a>
+<a class="card" href="./games/slither/sfge.html"><h3>Slither.io</h3><p>Grow the snake.</p></a>
+<a class="card" href="./games/motox3m/motox3m.html"><h3>Moto X3M</h3><p>Bike stunts.</p></a>
+<a class="card" href="./games/templerun2/Temple Run 2.html"><h3>Temple Run 2</h3><p>Endless runner.</p></a>
 
-      <a class="card" href="./games/minecraft/Astra_Client.html">
-      <h3>Minecraft 1.8.8</h3>
-      <p>Classic version, multiplayer works with 1.8.8 servers.</p>
-    </a>
-
-        <a class="card" href="./games/minecraft/mincraft1,12,2.html">
-      <h3>Minecraft 1.12.2</h3>
-      <p>Singleplayer version, multiplayer not supported.</p>
-    </a>
-
-        <a class="card" href="./games/Buckshot-Roulette/index.html">
-      <h3>Buckshot Roulette</h3>
-      <p>Test your luck in a wild shooting mini-game.</p>
-    </a>
-
-        <a class="card" href="./games/FNAF/1.html">
-      <h3>Five Nights At Freddys</h3>
-      <p>Survive night shifts at Freddy Fazbear’s Pizza.</p>
-    </a>
-
-      <a class="card" href="./games/FNAF/2.html">
-      <h3>Five Nights At Freddys 2</h3>
-      <p>Face new animatronics and manage limited power.</p>
-    </a>
-
-      <a class="card" href="./games/FNAF/3.html">
-      <h3>Five Nights At Freddys 3</h3>
-      <p>Investigate the horror in a spooky abandoned attraction.</p>
-    </a>
-
-      <a class="card" href="./games/FNAF/4.html">
-      <h3>Five Nights At Freddys 4</h3>
-      <p>Nightmare-filled nights in a haunted child’s bedroom.</p>
-    </a>
-
-        <a class="card" href="./games/FNAF/4.html">
-      <h3>Five Nights At Freddys 4</h3>
-      <p>Nightmare-filled nights in a haunted child’s bedroom.</p>
-    </a>
-
-       <a class="card" href="./games/FNAF/sisterlocation.html">
-      <h3>Five Nights At Freddys Sister Location</h3>
-      <p></p>
-    </a>
-
-      <a class="card" href="./games/R.E.P.O/index.html">
-      <h3>R.E.P.O</h3>
-      <p>Explore monster-filled facilities to collect and extract valuable items.</p>
-    </a>
-
-      <a class="card" href="./games/Thats-Not-My-Neighbor/index.html">
-      <h3>Thats Not My Neighbor</h3>
-      <p>Solve neighborhood mysteries in a stealthy adventure.</p>
-    </a>
-
-      <a class="card" href="./games/The-Deadseat/index.html">
-      <h3>The Deadseat</h3>
-      <p>Survive waves of zombies in this fast-paced shooter.</p>
-    </a>
-
-      <a class="card" href="https://huffine.github.io/games/SnowRider3D/Snow-Rider-3D.html">
-      <h3>Snow Rider 3d.</h3>
-      <p>Ride A sled.</p>
-    </a>
-
-      <a class="card" href="./games/Ultrakill/index.html">
-      <h3>UltraKill</h3>
-      <p>High-speed retro-style first-person shooter carnage.</p>
-    </a>
-
-      <a class="card" href="./games/Undertale/index.html">
-      <h3>Undertale</h3>
-      <p>Unique RPG with quirky characters and choices.</p>
-    </a>
-
-      <a class="card" href="./games/unicycle-hero/unicycle-hero.html">
-      <h3>Unicycle Hero</h3>
-      <p>Master stunts and tricks on a unicycle.</p>
-    </a>
-
-     <a class="card" href="./games/Baldis-basics/index.html">
-      <h3>Baldi's Basics</h3>
-      <p>Escape Baldi’s school by solving math problems and avoiding his wrath.</p>
-    </a>
-
-     <a class="card" href="./games/home-alone/index.html">
-      <h3>Fears to Fathom Home Alone</h3>
-      <p>A chilling story-driven horror about being home alone one night.</p>
-    </a>
-
-     <a class="card" href="./games/hotline-miami/index.html">
-      <h3>Hotline Miami</h3>
-      <p>Fast-paced top-down action packed with brutal combat and neon style.</p>
-    </a>
-
-     <a class="card" href="./games/the-man-in-the-window/index.html">
-      <h3>The Man In The Window</h3>
-      <p>An eerie short horror game about a mysterious man watching you.</p>
-    </a>
-
-   <a class="card" href="./games/CupHead/index.html">
-      <h3>CupHead</h3>
-      <p>Run-and-gun action with challenging boss battles in a 1930s cartoon style.</p>
-    </a>
-
-    <a class="card" href="./games/Slender/index.html">
-      <h3>Slender</h3>
-      <p>Collect eight pages in the dark while avoiding the faceless Slender Man.</p>
-    </a>
-
-<a class="card" href="./games/alien-hominid/Alien Hominid.html">
-      <h3>Alien Hominid</h3>
-      <p>Fast-paced alien shooter with cartoon chaos.</p>
-    </a>
-   
-<a class="card" href="./games/angry-birds/Angry Birds.html">
-      <h3>Angry Birds</h3>
-      <p>Launch birds to topple pig-filled towers.</p>
-    </a>
-   
-<a class="card" href="./games/backrooms/Backrooms.html">
-      <h3>Backrooms</h3>
-      <p>Escape an eerie maze of endless rooms.</p>
-    </a>
-   
-<a class="card" href="./games/basket-random/Basket Random.html">
-      <h3>Basket Random</h3>
-      <p>Wild basketball with unpredictable physics.</p>
-    </a>
-   
-<a class="card" href="./games/bloons-td4/Bloons TD 4.html">
-      <h3>Bloons TD 4</h3>
-      <p>Classic tower defense with popping balloons.</p>
-    </a>
-      
-<a class="card" href="./games/bloonstd6/btd6.html">
-      <h3>Bloons TD 6</h3>
-      <p>New and enhanced tower defense with popping balloons.</p>
-    </a>
-   
-<a class="card" href="./games/bloxorz/Bloxorz.html">
-      <h3>Bloxorz</h3>
-      <p>Roll a block through mind-bending mazes.</p>
-    </a>
-   
-<a class="card" href="./games/burito-bison/Burrito Bison.html">
-      <h3>Burrito Bison</h3>
-      <p>Launch a luchador to smash through gummies.</p>
-    </a>
-   
-<a class="card" href="./games/candy-crush/Candy Crush.html">
-      <h3>Candy Crush</h3>
-      <p>Match sweet candies to solve puzzles.</p>
-    </a>
-   
-<a class="card" href="./games/chess-classic/Chess Classic.html">
-      <h3>Chess Classic</h3>
-      <p>Play traditional chess against smart opponents.</p>
-    </a>
-   
-<a class="card" href="./games/city-smash/City Smash.html">
-      <h3>City Smash</h3>
-      <p>Destroy cities with crazy weapons and disasters.</p>
-    </a>
-   
-<a class="card" href="./games/cluster-truck/Cluster Rush.html">
-      <h3>Cluster Truck</h3>
-      <p>Jump across moving trucks in chaos.</p>
-    </a>
-   
-<a class="card" href="./games/cookie-clicker/Cookie Clicker.html">
-      <h3>Cookie Clicker</h3>
-      <p>Click and build a cookie empire.</p>
-    </a>
-   
-<a class="card" href="./games/crazy-cattle-3d/Crazy Cattle 3D.html">
-      <h3>Crazy Cattle 3D</h3>
-      <p>Herd chaos in a 3D cow adventure.</p>
-    </a>
-   
-<a class="card" href="./games/crossy-road/Crossy Road.html">
-      <h3>Crossy Road</h3>
-      <p>Dodge traffic and cross roads endlessly.</p>
-    </a>
-   
-<a class="card" href="./games/cut-the-rope/Cut the Rope.html">
-      <h3>Cut the Rope</h3>
-      <p>Feed candy to Om Nom by cutting ropes.</p>
-    </a>
-   
-<a class="card" href="./games/deltarune/Deltarune.html">
-      <h3>Deltarune</h3>
-      <p>RPG adventure from the creator of Undertale.</p>
-    </a>
-   
-<a class="card" href="./games/flappy-bird/Flappy Bird.html">
-      <h3>Flappy Bird</h3>
-      <p>Tap to keep the bird flying through pipes.</p>
-    </a>
-   
-<a class="card" href="./games/fruit-ninja/Fruit Ninja.html">
-      <h3>Fruit Ninja</h3>
-      <p>Slice fruits mid-air with ninja speed.</p>
-    </a>
-   
-<a class="card" href="./games/geometry-dash/Geometry Dash Lite.html">
-      <h3>Geometry Dash</h3>
-      <p>Jump and fly through rhythm-based levels.</p>
-    </a>
-   
-<a class="card" href="./games/google-baseball/Google Baseball.html">
-      <h3>Google Baseball</h3>
-      <p>Play baseball with classic Google doodle style.</p>
-    </a>
-   
-<a class="card" href="./games/granny/Granny.html">
-      <h3>Granny</h3>
-      <p>Avoid Granny and escape her creepy house.</p>
-    </a>
-   
-<a class="card" href="./games/granny-2/Granny.html 2">
-      <h3>Granny 2</h3>
-      <p>Escape a scary house with Granny and Grandpa.</p>
-    </a>
-   
-<a class="card" href="./games/granny-3/Granny.html 3">
-      <h3>Granny 3</h3>
-      <p>A creepier escape game in a haunted mansion.</p>
-    </a>
-   
-<a class="card" href="./games/halflife/Half Life.html">
-      <h3>Half Life</h3>
-      <p>Classic sci-fi FPS with puzzle and action.</p>
-    </a>
-   
-<a class="card" href="./games/idle-breakout/Idle Breakout.html">
-      <h3>Idle Breakout</h3>
-      <p>Break bricks and upgrade in an idle twist.</p>
-    </a>
-   
-<a class="card" href="./games/jetpack-joyride/Jetpack Joyride.html">
-      <h3>Jetpack Joyride</h3>
-      <p>Fly with a jetpack and dodge hazards.</p>
-    </a>
-   
-<a class="card" href="./games/magic-tiles-3/Magic Tiles 3.html">
-      <h3>Magic Tiles 3</h3>
-      <p>Tap piano tiles in rhythm to win.</p>
-    </a>
-   
-<a class="card" href="./games/paper.io2/Paper.io 2.html">
-      <h3>Paper.io 2</h3>
-      <p>Expand your territory in this online IO game.</p>
-    </a>
-   
-<a class="card" href="./games/plantsvszombies/Plants vs Zombies.html">
-      <h3>Plants vs Zombies</h3>
-      <p>Defend your garden from zombie invasions.</p>
-    </a>
-   
-<a class="card" href="./games/retro-bowl-college/Retro Bowl College.html">
-      <h3>Retro Bowl College</h3>
-      <p>Manage a college football team retro-style.</p>
-    </a>
-   
-<a class="card" href="./games/retro-bowl/Retro Bowl.html">
-      <h3>Retro Bowl</h3>
-      <p>Lead your football team to retro glory.</p>
-    </a>
-   
-<a class="card" href="./games/run3/Run 3.html">
-      <h3>Run 3</h3>
-      <p>Run and jump through space tunnels.</p>
-    </a>
-   
-<a class="card" href="./games/solar-smash/Solar Smash.html">
-      <h3>Solar Smash</h3>
-      <p>Destroy planets with cosmic weapons.</p>
-    </a>
-<a class="card" href="./games/Slope/Slope.html">
-      <h3>slope</h3>
-      <p></p>
-    </a>
-<a class="card" href="./games/Slope/Slope 2.html">
-      <h3>slope 2</h3>
-      <p></p>
-    </a>
-      
-<a class="card" href="./games/speed-stars/Speed Stars.html">
-      <h3>Speed Stars</h3>
-      <p>Race against time in sprint challenges.</p>
-    </a>
-      
-<a class="card" href="./games/station-saturn/Station Saturn.html">
-      <h3>Station Saturn</h3>
-      <p>A sci-fi adventure on a space station.</p>
-    </a>
-      
-<a class="card" href="./games/subway-surfers/Subway Surfers_ Miami.html">
-      <h3>Subway Surfers</h3>
-      <p>Dash and dodge trains in endless runner.</p>
-    </a>
-      
-<a class="card" href="./games/superhot/Superhot.html">
-      <h3>Superhot</h3>
-      <p>Time moves only when you move in this shooter.</p>
-    </a>
-      
-<a class="card" href="./games/templerun2/Temple Run 2.html">
-      <h3>Temple Run 2</h3>
-      <p>Run endlessly while dodging jungle hazards.</p>
-    </a>
-      
-<a class="card" href="./games/vex7/Vex 7.html">
-      <h3>Vex 7</h3>
-      <p>Parkour through deadly traps in stickman style.</p>
-    </a>
-            
-<a class="card" href="./games/drift-hunters/drift-hunters.html">
-      <h3>Drift hunters</h3>
-      <p>Drive and drift in drift hunters.</p>
-    </a>
-            
-<a class="card" href="./games/pint/pretenditsnotthere.html">
-      <h3>Pretend it's not there</h3>
-      <p>a scary horror game.</p>
-    </a>
-            
-<a class="card" href="./games/slither/sfge.html">
-      <h3>Slither.io</h3>
-      <p>Be snake and grow to get higher on the leader board.</p>
-    </a>
-            
-<a class="card" href="./games/happywheels/happywheelss.html">
-      <h3>Happy Wheels</h3>
-      <p>drive through deadly traps in Happy Wheels.</p>
-    </a>
-            
-<a class="card" href="./games/kindergarten/index.html">
-      <h3>Kindergarten</h3>
-      <p>Survive a bizarre and deadly school day.</p>
-    </a>
-                  
-<a class="card" href="./games/kindergarten 2/index.html">
-      <h3>Kindergarten 2</h3>
-      <p>New school, crazier kids, deadlier secrets.</p>
-    </a>
-                  
-<a class="card" href="./games/kindergarten 3/Kindergarten3.html">
-      <h3>Kindergarten 3</h3>
-      <p>More chaos, mysteries, and choices.</p>
-    </a>
-                     
-<a class="card" href="./games/motox3m/motox3m.html">
-      <h3>MOTO X3M</h3>
-      <p>Race through wild obstacle courses with stunts and speed.</p>
-    </a>
-                         
-<a class="card" href="./games/2048/2048.html">
-      <h3>2048</h3>
-      <p>match blocks up to make 2048.</p>
-    </a>
-                          
-<a class="card" href="./games/8-ball-pool/8 Ball Pool.html">
-      <h3>8 ball pool</h3>
-      <p>Classic pool.</p>
-    </a>
-                          
-<a class="card" href="./games/3d-bowling/3D Bowling.html">
-      <h3>3D-bowling</h3>
-      <p>classic bowling.</p>
-    </a>
-      
-  </div>
+</div>
 </div>
 
 <script>
-// Starfield particles background
-const canvas = document.getElementById('starfield');
-const ctx = canvas.getContext('2d');
-let w = canvas.width = window.innerWidth;
-let h = canvas.height = window.innerHeight;
-
-const stars = [];
-const numStars = 400;
-
-for(let i=0;i<numStars;i++){
-  stars.push({
-    x: Math.random()*w,
-    y: Math.random()*h,
-    r: Math.random()*1.5+0.5,
-    vx: (Math.random()-0.5)*0.7,
-    vy: (Math.random()-0.5)*0.7
-  });
-}
-
-function animate() {
-  ctx.fillStyle = '#000';
-  ctx.fillRect(0,0,w,h);
-
-  ctx.fillStyle = '#fff';
-  stars.forEach(s=>{
-    s.x += s.vx;
-    s.y += s.vy;
-
-    if(s.x<0) s.x=w;
-    if(s.x>w) s.x=0;
-    if(s.y<0) s.y=h;
-    if(s.y>h) s.y=0;
-
-    ctx.beginPath();
-    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-    ctx.fill();
-  });
-
-  requestAnimationFrame(animate);
-}
-
-animate();
-
-window.addEventListener('resize', ()=>{
-  w = canvas.width = window.innerWidth;
-  h = canvas.height = window.innerHeight;
+/* STARFIELD */
+const canvas=document.getElementById('starfield'),ctx=canvas.getContext('2d');
+let w=canvas.width=window.innerWidth,h=canvas.height=window.innerHeight;
+let stars=[...Array(400)].map(()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5),vy:(Math.random()-.5),r:Math.random()*1.5+0.5}));
+function animate(){
+ctx.fillStyle="#000";ctx.fillRect(0,0,w,h);
+ctx.fillStyle="#fff";
+stars.forEach(s=>{
+s.x+=s.vx;s.y+=s.vy;
+if(s.x<0)s.x=w;if(s.x>w)s.x=0;
+if(s.y<0)s.y=h;if(s.y>h)s.y=0;
+ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();
 });
+requestAnimationFrame(animate);
+}
+animate();
+window.onresize=()=>{w=canvas.width=innerWidth;h=canvas.height=innerHeight};
 
-// Search/filter function
-function filterGames() {
-  const input = document.getElementById('search').value.toLowerCase();
-  const cards = document.querySelectorAll('.card');
-
-  cards.forEach(card => {
-    const title = card.querySelector('h3').textContent.toLowerCase();
-    const desc = card.querySelector('p').textContent.toLowerCase();
-    if(title.includes(input) || desc.includes(input)){
-      card.style.display = '';
-    } else {
-      card.style.display = 'none';
-    }
-  });
+/* SEARCH */
+function filterGames(){
+const v=search.value.toLowerCase();
+document.querySelectorAll('.card').forEach(c=>{
+c.style.display=c.innerText.toLowerCase().includes(v)?"":"none";
+});
 }
 
- // Apply saved favicon and tab title from localStorage
-function applySavedSettings() {
-  const savedTitle = localStorage.getItem('disguiseTitle');
-  const savedFavicon = localStorage.getItem('disguiseFavicon');
-  if (savedTitle) document.title = savedTitle;
-  if (savedFavicon) document.getElementById('dynamic-favicon').href = savedFavicon;
+/* SORT */
+function sortGames(){
+const c=document.getElementById('cards-container');
+const cards=[...c.children];
+cards.sort((a,b)=>{
+const A=a.querySelector('h3').innerText.toLowerCase();
+const B=b.querySelector('h3').innerText.toLowerCase();
+return sort.value==="az"?A.localeCompare(B):B.localeCompare(A);
+});
+cards.forEach(card=>c.appendChild(card));
 }
 
-// Call it immediately
-applySavedSettings();
-
+/* DISGUISE */
+const t=localStorage.getItem("disguiseTitle");
+const f=localStorage.getItem("disguiseFavicon");
+if(t)document.title=t;
+if(f)document.getElementById("dynamic-favicon").href=f;
 </script>
 
- 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
